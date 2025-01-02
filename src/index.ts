@@ -1,8 +1,6 @@
+import 'dotenv/config'
 import { handleCron } from "./controllers/cron"
 import cron from 'node-cron';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 async function main() {
   console.log(`Starting process to generate draft...`);

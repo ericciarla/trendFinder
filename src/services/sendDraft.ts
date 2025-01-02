@@ -1,6 +1,4 @@
 import axios from 'axios';
-import dotenv from 'dotenv';
-dotenv.config();
 
 export async function sendDraft(draft_post: string) {
   try {

@@ -1,10 +1,7 @@
 import FirecrawlApp from '@mendable/firecrawl-js';
-import dotenv from 'dotenv';
 import Together from 'together-ai';
 import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
-
-dotenv.config();
 
 const app = new FirecrawlApp({ apiKey: process.env.FIRECRAWL_API_KEY });
 
@@ -114,9 +111,9 @@ export async function scrapeSources(sources: string[]) {
               {
                 role: "system",
                 content: `Today is ${currentDate}. Return only today's AI or LLM related story or post headlines and links in JSON format from the scraped content. They must be posted today. The format should be {"stories": [{"headline": "headline1", "link": "link1", "date_posted": "date1"}, ...]}.
-If there are no AI or LLM stories from today, return {"stories": []}. The source link is ${source}. 
-If the story or post link is not absolute, prepend ${source} to make it absolute. 
-Return only pure JSON in the specified format (no extra text, no markdown, no \`\`\`). 
+If there are no AI or LLM stories from today, return {"stories": []}. The source link is ${source}.
+If the story or post link is not absolute, prepend ${source} to make it absolute.
+Return only pure JSON in the specified format (no extra text, no markdown, no \`\`\`).
 Scraped Content:\n\n${scrapeResponse.markdown}\n\nJSON:`,
               },
             ],
