@@ -1,10 +1,4 @@
 
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-
-
 export async function getCronSources() {
   try {
     console.log("Fetching sources...");
@@ -31,12 +25,11 @@ export async function getCronSources() {
       { identifier: "https://x.com/nickscamara_"},
       { identifier: "https://x.com/ericciarla"},
       { identifier: "https://www.firecrawl.dev/blog"},
-      
+
     ];
 
     return sources.map(source => source.identifier);
   } catch (error) {
     console.error(error);
   }
-} 
-  
+}
