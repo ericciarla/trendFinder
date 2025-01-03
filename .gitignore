@@ -3,3 +3,4 @@ node_modules
 .vercel
 .devcontainer.json
 dist
+.vscode

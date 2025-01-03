@@ -5,7 +5,10 @@
   "scripts": {
     "start": "nodemon src/index.ts",
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format:check": "prettier --check \"src/**/*.{ts,js}\"",
+    "format:fix": "prettier --write \"src/**/*.{ts,js}\"",
+    "prepare": "husky install"
   },
   "author": "",
   "license": "ISC",
@@ -13,8 +16,11 @@
     "@types/express": "^4.17.21",
     "@types/node": "^20.10.2",
     "@types/node-cron": "^3.0.11",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.3.0",
     "nodemon": "^3.0.2",
     "pre-commit": "^1.2.2",
+    "prettier": "^3.4.2",
     "rimraf": "^5.0.5",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.2"
