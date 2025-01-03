@@ -2,7 +2,7 @@
 
 **Stay on top of trending topics on social media — all in one place.**
 
-Trend Finder collects and analyzes posts from key influencers, then sends a Slack notification when it detects new trends or product launches. This has been a complete game-changer for the @firecrawl_dev marketing team by:
+Trend Finder collects and analyzes posts from key influencers , then sends a Slack notification when it detects new trends or product launches. This has  been a complete game-changer for the @firecrawl_dev marketing team by:
 
 - **Saving time** normally spent manually searching social channels
 - **Keeping you informed** of relevant, real-time conversations
@@ -13,17 +13,20 @@ _Spend less time hunting for trends and more time creating impactful campaigns._
 ## How it Works
 
 1. **Data Collection** 📥
+
    - Monitors selected influencers' posts on Twitter/X using their API
    - Uses Firecrawl to gather additional web data and context
    - Runs on a scheduled basis using cron jobs
 
 2. **AI Analysis** 🧠
+
    - Processes collected content through Together AI
    - Identifies emerging trends and patterns
    - Detects product launches and significant conversations
    - Analyzes sentiment and relevance
 
 3. **Notification System** 📢
+
    - When significant trends are detected, sends instant Slack notifications
    - Provides context about the trend and its sources
    - Enables quick response to emerging opportunities
@@ -89,23 +92,27 @@ SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
 ## Getting Started
 
 1. **Clone the repository:**
+
    ```bash
    git clone [repository-url]
    cd trend-finder
    ```
 
 2. **Install dependencies:**
+
    ```bash
    npm install
    ```
 
 3. **Configure environment variables:**
+
    ```bash
    cp .env.example .env
    # Edit .env with your configuration
    ```
 
 4. **Run the application:**
+
    ```bash
    # Development mode with hot reloading
    npm run start
@@ -117,6 +124,7 @@ SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
 ## Using Docker
 
 1. **Build the Docker image:**
+
    ```bash
    docker build -t trend-finder .
    ```
@@ -129,6 +137,7 @@ SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
 ## Using Docker Compose
 
 1. **Start the application with Docker Compose:**
+
    ```bash
    docker-compose up --build -d
    ```
@@ -145,6 +154,7 @@ trend-finder/
 ├── src/
 │   ├── controllers/    # Request handlers
 │   ├── services/       # Business logic
+│   ├── lib/            # Shared utilities
 │   └── index.ts        # Application entry point
 ├── .env.example        # Environment variables template
 ├── package.json        # Dependencies and scripts
