@@ -1,0 +1,34 @@
+name: Build Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  docker-build:
+    name: Build and Save Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set Image Tag
+      id: vars
+      run: echo "IMAGE_TAG=${GITHUB_REF_NAME}-${GITHUB_SHA::7}" >> $GITHUB_ENV
+      
+    - name: Build Docker Image
+      run: docker build -t trend-finder:${{ env.IMAGE_TAG }} .
+
+    - name: Save Docker Image
+      run: docker save trend-finder:${{ env.IMAGE_TAG }} | gzip > trend-finder-${{ env.IMAGE_TAG }}.tar.gz
+
+    - name: Upload Docker Image Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: trend-finder-image-${{ env.IMAGE_TAG }}
+        path: trend-finder-${{ env.IMAGE_TAG }}.tar.gz
