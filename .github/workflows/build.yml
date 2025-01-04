@@ -1,4 +1,4 @@
-name: Docker Build Pipeline
+name: Build Pipeline
 
 on:
   push:
@@ -14,28 +14,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Checkout code
     - name: Checkout Code
-      uses: actions/checkout@v3
-
-    # Get branch name and short commit hash, sanitize tag
+      uses: actions/checkout@v4
+      
     - name: Set Image Tag
       id: vars
       run: |
         IMAGE_TAG=$(echo "${GITHUB_REF_NAME}-${GITHUB_SHA::7}" | tr '/' '-')
         echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
-    # Build Docker image with sanitized tag
     - name: Build Docker Image
       run: docker build -t trend-finder:${{ env.IMAGE_TAG }} .
 
-    # Save Docker image as a tarball
     - name: Save Docker Image
       run: docker save trend-finder:${{ env.IMAGE_TAG }} | gzip > trend-finder-${{ env.IMAGE_TAG }}.tar.gz
 
-    # Upload Docker image as artifact
     - name: Upload Docker Image Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: trend-finder-image-${{ env.IMAGE_TAG }}
         path: trend-finder-${{ env.IMAGE_TAG }}.tar.gz
