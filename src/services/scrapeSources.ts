@@ -30,7 +30,7 @@ export async function scrapeSources(sources: string[]) {
 
   // Configure these if you want to toggle behavior
   const useTwitter = true;
-  const useScrape = true;
+  const useScrape = false;
 
   for (const source of sources) {
     // --- 1) Handle x.com (Twitter) sources ---
