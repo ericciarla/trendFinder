@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Settings {
+  id           Int      @id @default(autoincrement())
+  cronInterval Int      @default(15) // in minutes
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model XAccount {
+  id        Int      @id @default(autoincrement())
+  username  String   // Store each X account as a separate record
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ApiKeys {
+  id          Int      @id @default(autoincrement())
+  service     String   @unique
+  key         String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model RunHistory {
+  id        Int      @id @default(autoincrement())
+  status    String   // "success" | "error"
+  message   String?
+  createdAt DateTime @default(now())
+}

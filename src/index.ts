@@ -1,18 +1,16 @@
-import { handleCron } from "./controllers/cron"
-import cron from 'node-cron';
-import dotenv from 'dotenv';
+import express from 'express';
+import cors from 'cors';
+import configRouter from './routes/config';
 
-dotenv.config();
+const app = express();
 
-async function main() {
-  console.log(`Starting process to generate draft...`);
-  await handleCron();
-}
-main();
+app.use(cors());
+app.use(express.json());
 
+// Mount the config routes
+app.use('/api', configRouter);
 
-// If you want to run the cron job manually, uncomment the following line:
-//cron.schedule(`0 17 * * *`, async () => {
-//  console.log(`Starting process to generate draft...`);
-//  await handleCron();
-//});
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

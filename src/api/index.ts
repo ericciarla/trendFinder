@@ -1,11 +1,16 @@
 import express from 'express'
 import cors from 'cors'
 import { handleCron } from '../controllers/cron'
+import configRouter from '../routes/config'
 
 const app = express()
 app.use(cors())
 app.use(express.json())
 
+// Mount config routes
+app.use('/api', configRouter)
+
+// Original cron endpoint
 app.post('/api/cron', async (req, res) => {
   try {
     await handleCron()

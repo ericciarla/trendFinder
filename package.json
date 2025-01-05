@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@mendable/firecrawl-js": "^1.8.1",
+    "@prisma/client": "^6.1.0",
     "@supabase/supabase-js": "^2.46.1",
     "cors": "^2.8.5",
     "dotenv": "^14.3.2",
@@ -32,6 +33,7 @@
     "node-cron": "^3.0.3",
     "openai": "^4.72.0",
     "playht": "^0.13.0",
+    "prisma": "^6.1.0",
     "resend": "^4.0.1-alpha.0",
     "together-ai": "^0.9.0",
     "ts-node-dev": "^2.0.0"
