@@ -3,8 +3,18 @@ import dotenv from 'dotenv';
 // Removed Together import
 import { z } from 'zod';
 // Removed zodToJsonSchema import since we no longer enforce JSON output via Together
+import prisma from '../lib/prisma'
 
 dotenv.config();
+
+// Get API keys at runtime
+async function getApiKeys() {
+  const keys = await prisma.apiKeys.findMany()
+  return {
+    firecrawlKey: keys.find(k => k.service === 'firecrawl')?.key,
+    xApiKey: keys.find(k => k.service === 'x')?.key
+  }
+}
 
 // Initialize Firecrawl
 const app = new FirecrawlApp({ apiKey: process.env.FIRECRAWL_API_KEY });

@@ -26,6 +26,8 @@ export function SettingsForm() {
   const [newAccount, setNewAccount] = useState('')
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([])
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [cronStatus, setCronStatus] = useState<'idle' | 'running' | 'success' | 'error'>('idle')
+  const [cronMessage, setCronMessage] = useState('')
 
   // Fetch initial settings
   useEffect(() => {
@@ -99,6 +101,28 @@ export function SettingsForm() {
       }
     } catch (error) {
       setStatus('error')
+    }
+  }
+
+  const handleTestCron = async () => {
+    try {
+      setCronStatus('running')
+      setCronMessage('')
+      
+      const response = await fetch('http://localhost:3001/api/cron', {
+        method: 'POST'
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to run cron job')
+      }
+      
+      const data = await response.json()
+      setCronStatus('success')
+      setCronMessage('Cron job completed successfully!')
+    } catch (error) {
+      setCronStatus('error')
+      setCronMessage(error instanceof Error ? error.message : 'Failed to run cron job')
     }
   }
 
@@ -177,6 +201,32 @@ export function SettingsForm() {
           >
             {status === 'loading' ? 'Saving...' : 'Save Settings'}
           </Button>
+        </CardContent>
+      </Card>
+
+      {/* Test Cron Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Test Run</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <Button 
+              onClick={handleTestCron}
+              disabled={cronStatus === 'running'}
+              className="w-full"
+            >
+              {cronStatus === 'running' ? 'Running...' : 'Test Cron Job Now'}
+            </Button>
+            
+            {cronMessage && (
+              <p className={`text-sm ${
+                cronStatus === 'success' ? 'text-green-600' : 'text-red-600'
+              }`}>
+                {cronMessage}
+              </p>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>
