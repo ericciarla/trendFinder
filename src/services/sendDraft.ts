@@ -1,19 +1,21 @@
 import axios from 'axios';
-import dotenv from 'dotenv';
-dotenv.config();
+import prisma from '../lib/prisma'
 
 export async function sendDraft(draft_post: string) {
   try {
+    // Get Slack webhook URL from database
+    const slackKey = await prisma.apiKeys.findFirst({
+      where: { service: 'slack' }
+    })
+
+    if (!slackKey?.key) {
+      throw new Error('Slack webhook URL not configured')
+    }
+
     const response = await axios.post(
-      process.env.SLACK_WEBHOOK_URL || '',
-      {
-        text: draft_post,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
+      slackKey.key,
+      { text: draft_post },
+      { headers: { 'Content-Type': 'application/json' } }
     );
 
     return `Success sending draft to webhook at ${new Date().toISOString()}`;

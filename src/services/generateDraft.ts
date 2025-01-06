@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import Together from 'together-ai';
 import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
+import prisma from '../lib/prisma'
 
 dotenv.config();
 
@@ -12,8 +13,17 @@ export async function generateDraft(rawStories: string) {
   console.log(`Generating a post draft with raw stories (${rawStories.length} characters)...`)
 
   try {
-    // Initialize Together client
-    const together = new Together();
+    // Get Together AI key from database
+    const togetherKey = await prisma.apiKeys.findFirst({
+      where: { service: 'together' }
+    })
+
+    if (!togetherKey?.key) {
+      throw new Error('Together AI key not configured')
+    }
+
+    // Initialize Together with key from database
+    const together = new Together({ apiKey: togetherKey.key });
 
     // Define the schema for our response
     const DraftPostSchema = z.object({
