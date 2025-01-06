@@ -131,14 +131,14 @@ export function SettingsForm() {
       {/* X Accounts Section */}
       <Card>
         <CardHeader>
-          <CardTitle>X Accounts to Monitor</CardTitle>
+          <CardTitle>X Accounts / Webpages to Monitor</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex space-x-2 mb-4">
             <Input 
               value={newAccount}
               onChange={(e) => setNewAccount(e.target.value)}
-              placeholder="@username"
+              placeholder="@username or https://example.com/blog"
             />
             <Button onClick={handleAddAccount}>Add</Button>
           </div>
