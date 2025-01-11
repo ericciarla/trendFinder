@@ -19,7 +19,7 @@ Learn how to set up Trend Finder and start monitoring trends in this video!
 ## How it Works
 
 1. **Data Collection** 📥
-   - Monitors selected influencers' posts on Twitter/X using the X API (Warning: the X API free plan is rate limited to only monitor 1 X account every 15 min)
+   - Monitors selected influencers' posts on Twitter/X using the X API (Warning: the X API free plan is rate limited to only monitor 1 X account every 15 min) or alternative API provided by [SocialData.tools](https://socialdata.tools)
    - Monitors websites for new releases and news with Firecrawl's /extract
    - Runs on a scheduled basis using cron jobs
 
@@ -48,6 +48,7 @@ Learn how to set up Trend Finder and start monitoring trends in this video!
 - **AI/ML**: Together AI
 - **Data Sources**:
   - Twitter/X API
+  - [SocialData.tools API](https://socialdata.tools)
   - Firecrawl
 - **Notifications**: Slack Webhooks
 - **Scheduling**: node-cron
@@ -76,8 +77,11 @@ TOGETHER_API_KEY=your_together_api_key_here
 # Required if monitoring web pages (https://www.firecrawl.dev/)
 FIRECRAWL_API_KEY=your_firecrawl_api_key_here
 
-# Required if monitoring Twitter/X trends (https://developer.x.com/)
-X_API_BEARER_TOKEN=your_twitter_api_bearer_token_here
+# Required if monitoring Twitter/X trends (https://developer.x.com/) and SOCIALDATA_API_KEY not set
+X_API_BEARER_TOKEN=
+
+# Required if monitoring Twitter/X trends (https://socialdata.tools/) and X_API_BEARER_TOKEN not set
+SOCIALDATA_API_KEY=
 
 # Required: Incoming Webhook URL from Slack for notifications
 SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
