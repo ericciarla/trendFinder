@@ -29,7 +29,8 @@ export async function scrapeSources(sources: string[]) {
   let combinedText: { stories: any[] } = { stories: [] };
 
   // Configure these if you want to toggle behavior
-  const useTwitter = true;
+  const useTwitter = !!process.env.X_API_BEARER_TOKEN;
+  const useSocialData = !!process.env.SOCIALDATA_API_KEY;
   const useScrape = true;
 
   for (const source of sources) {
@@ -75,6 +76,55 @@ export async function scrapeSources(sources: string[]) {
                 headline: tweet.text,
                 link: `https://x.com/i/status/${tweet.id}`,
                 date_posted: startTime,
+              };
+            });
+            combinedText.stories.push(...stories);
+          } else {
+            console.error(
+              "Expected tweets.data to be an array:",
+              tweets.data
+            );
+          }
+        }
+      }
+      else if (useSocialData) {
+        const usernameMatch = source.match(/x\.com\/([^\/]+)/);
+        if (usernameMatch) {
+          const username = usernameMatch[1];
+
+          // Get tweets from the last 24 hours
+          const startTime = Math.floor((Date.now() - 24 * 60 * 60 * 1000) / 1000);
+
+          // Build the search query for tweets
+          const query = `from:${username} -filter:nativeretweets -filter:replies since_time:${startTime}`;
+          console.log(query)
+          const encodedQuery = encodeURIComponent(query);
+
+          // SocialData.tools API URL
+          const apiUrl = `https://api.socialdata.tools/twitter/search?query=${encodedQuery}`;
+
+          // Fetch recent tweets from the Twitter API
+          const response = await fetch(apiUrl, {
+            headers: {
+              Authorization: `Bearer ${process.env.SOCIALDATA_API_KEY}`,
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`Failed to fetch tweets for ${username}: ${response.statusText}`);
+          }
+
+          const tweets = await response.json();
+
+          if (tweets.tweets?.length === 0) {
+            console.log(`No tweets found for username ${username}.`);
+          } else if (Array.isArray(tweets.tweets)) {
+            console.log(`Tweets found from username ${username}`);
+            const stories = tweets.tweets.map((tweet: any) => {
+              return {
+                headline: tweet.full_text,
+                link: `https://x.com/${tweet.user.screen_name}/status/${tweet.id_str}`,
+                date_posted: tweet.tweet_created_at,
               };
             });
             combinedText.stories.push(...stories);
