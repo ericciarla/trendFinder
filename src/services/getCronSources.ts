@@ -8,7 +8,7 @@ export async function getCronSources() {
     console.log("Fetching sources...");
 
     // Check for required API keys
-    const hasXApiKey = !!process.env.X_API_BEARER_TOKEN;
+    const hasXApiKey = !!process.env.X_API_BEARER_TOKEN || !!process.env.SOCIALDATA_API_KEY;
     const hasFirecrawlKey = !!process.env.FIRECRAWL_API_KEY;
 
     // Filter sources based on available API keys
