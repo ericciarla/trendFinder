@@ -1,78 +1,76 @@
-import OpenAI from "openai";
 import dotenv from "dotenv";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+// import OpenAI from "openai";
 
 dotenv.config();
 
 /**
- * Generate a post draft based on scraped raw stories.
- * If no items are found, a fallback message is returned.
+ * Generate a post draft with trending ideas based on raw tweets.
  */
 export async function generateDraft(rawStories: string) {
-  console.log(
-    `Generating a post draft with raw stories (${rawStories.length} characters)...`,
-  );
+  console.log(`Generating a post draft with raw stories (${rawStories.length} characters)...`);
 
   try {
-    const currentDate = new Date().toLocaleDateString();
-    const header = `🚀 AI and LLM Trends on X for ${currentDate}\n\n`;
-
-    // Instantiate the OpenAI client using your OPENAI_API_KEY
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+    // Get current date for header
+    const currentDate = new Date().toLocaleDateString("en-US", {
+      timeZone: "America/New_York",
+      month: "numeric",
+      day: "numeric",
     });
 
-    // Prepare messages with explicit literal types
-    const messages: Array<{ role: "system" | "user"; content: string }> = [
+    // Define prompt
+    const prompt = `
+      You are given a list of raw AI and LLM-related tweets sourced from X/Twitter.
+      Your task is to find interesting trends, launches, or unique insights from the tweets.
+      For each tweet, provide a 'story_or_tweet_link' and a one-sentence 'description'.
+      Return at least 10 tweets unless fewer are available.
+      
+      Format the output strictly as JSON:
       {
-        role: "system",
-        content:
-          "You are a helpful assistant that creates a concise, bullet-pointed draft post based on input stories and tweets. " +
-          "Return strictly valid JSON that has a key 'interestingTweetsOrStories' containing an array of items. " +
-          "Each item should have a 'description' and a 'story_or_tweet_link' key.",
-      },
-      {
-        role: "user",
-        content: rawStories,
-      },
-    ];
+        "interestingTweetsOrStories": [
+          {
+            "story_or_tweet_link": "https://x.com/...",
+            "description": "..."
+          }
+        ]
+      }
 
-    // Call the chat completions API using the o3-mini model
-    const completion = await openai.chat.completions.create({
-      model: "o3-mini",
-      reasoning_effort: "medium",
-      messages,
-      store: true,
-    });
+      Here are the raw tweets:
+      ${rawStories}
+    `;
+//o3-mini implementation
 
-    const rawJSON = completion.choices[0].message.content;
+// const completion = await openai.chat.completions.create({
+//   model: "o3-mini",
+//   reasoning_effort: "medium",
+//   messages: [{ role: "user", content: prompt }],
+//   store: true,
+// });
+
+    // Initialize Gemini client
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+    // Call Gemini API
+    const result = await model.generateContent(prompt);
+    const rawJSON = result.response.text().replace(/```json/g, '').replace(/```/g, '').trim();
+
     if (!rawJSON) {
-      console.log("No JSON output returned from OpenAI.");
-      return header + "No output.";
+      console.log("No JSON output returned.");
+      return "No output.";
     }
-    console.log(rawJSON);
 
+    console.log(rawJSON);
     const parsedResponse = JSON.parse(rawJSON);
 
-    // Check for either key and see if we have any content
-    const contentArray =
-      parsedResponse.interestingTweetsOrStories || parsedResponse.stories || [];
-    if (contentArray.length === 0) {
-      return header + "No trending stories or tweets found at this time.";
-    }
-
-    // Build the draft post using the content array
-    const draft_post =
-      header +
-      contentArray
-        .map(
-          (item: any) =>
-            `• ${item.description || item.headline}\n  ${
-              item.story_or_tweet_link || item.link
-            }`,
-        )
-        .join("\n\n");
+    // Construct the final post
+    const header = `🚀 AI and LLM Trends on X for ${currentDate}\n\n`;
+    const draft_post = header + parsedResponse.interestingTweetsOrStories
+      .map((tweetOrStory: any) => `• ${tweetOrStory.description}\n  ${tweetOrStory.story_or_tweet_link}`)
+      .join("\n\n");
 
     return draft_post;
+
   } catch (error) {
     console.error("Error generating draft post", error);
     return "Error generating draft post.";
