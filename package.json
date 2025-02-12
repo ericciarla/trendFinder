@@ -20,7 +20,8 @@
     "typescript": "^5.3.2"
   },
   "dependencies": {
-    "@mendable/firecrawl-js": "^1.8.1",
+    "@google/generative-ai": "^0.21.0",
+    "@mendable/firecrawl-js": "^1.16.0",
     "@supabase/supabase-js": "^2.46.1",
     "dotenv": "^14.3.2",
     "express": "^4.18.2",

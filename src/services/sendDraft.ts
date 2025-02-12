@@ -27,8 +27,13 @@ async function sendDraftToDiscord(draft_post: string) {
 
 async function sendDraftToSlack(draft_post: string) {
   try {
+    const webhookUrl = process.env.SLACK_WEBHOOK_URL;
+    if (!webhookUrl) {
+      throw new Error("SLACK_WEBHOOK_URL is not defined.");
+    }
+
     const response = await axios.post(
-      process.env.SLACK_WEBHOOK_URL || '',
+      webhookUrl,
       {
         text: draft_post,
       },

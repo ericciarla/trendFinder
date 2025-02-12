@@ -134,6 +134,8 @@ Return only pure JSON in the specified format (no extra text, no markdown, no \`
           console.log(
             `Found ${todayStories.stories.length} stories from ${source}`,
           );
+          console.log(scrapeResult);
+
           combinedText.stories.push(...todayStories.stories);
         } catch (error: any) {
           if (error.statusCode === 429) {
@@ -150,4 +152,5 @@ Return only pure JSON in the specified format (no extra text, no markdown, no \`
 
   console.log("Combined Stories:", combinedText.stories);
   return combinedText.stories;
+
 }

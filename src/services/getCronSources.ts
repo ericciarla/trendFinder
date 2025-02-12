@@ -14,19 +14,14 @@ export async function getCronSources(): Promise<{ identifier: string }[]> {
     const sources: { identifier: string }[] = [
       ...(hasFirecrawlKey
         ? [
-            { identifier: "https://www.firecrawl.dev/blog" },
-            { identifier: "https://openai.com/news/" },
-            { identifier: "https://www.anthropic.com/news" },
-            { identifier: "https://news.ycombinator.com/" },
             {
               identifier:
-                "https://www.reuters.com/technology/artificial-intelligence/",
+                "https://news.ycombinator.com/",
             },
-            { identifier: "https://simonwillison.net/" },
-            { identifier: "https://buttondown.com/ainews/archive/" },
+            // { identifier: "https://simonwillison.net/" },
           ]
         : []),
-      ...(hasXApiKey ? [{ identifier: "https://x.com/skirano" }] : []),
+      // ...(hasXApiKey ? [{ identifier: "https://x.com/v0" }] : []),
     ];
 
     // Return the full objects instead of mapping to strings
